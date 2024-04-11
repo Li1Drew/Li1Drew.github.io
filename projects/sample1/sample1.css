@@ -1,0 +1,33 @@
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+}
+
+div#cScenes {
+    margin-top: 15%;
+    display: flex;
+    justify-content: center;
+}
+
+div#cScenes a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: lightgrey;
+    width: 150px;
+    height: 80px;
+    margin: 10px;
+    text-decoration: none;
+    box-shadow: 0 2px 2px black;
+    border-radius: 5px;
+    color: black;
+    transition: 0.5S;
+}
+
+div#cScenes a:hover {
+    background-color: gray;
+    color: white;
+    cursor: pointer;
+    transition: 0.5S;
+}
