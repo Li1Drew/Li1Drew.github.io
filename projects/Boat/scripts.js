@@ -1,16 +1,24 @@
 import * as THREE from 'three';
 
+import { Clock } from 'https://cdn.skypack.dev/three@0.137';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Water } from 'three/addons/objects/Water.js';
 import { Sky } from 'three/addons/objects/Sky.js';
 
 let camera, scene, renderer;
-let controls, water, sun;
+let controls, water, sun, boat;
+
+const clock = new Clock();
 
 init();
 animate();
 
 function init() {
+
+    // Loaders
+    const gltfLoader = new GLTFLoader();
+    const textureLoader = new THREE.TextureLoader();
 
     //
 
@@ -31,6 +39,20 @@ function init() {
     //
 
     sun = new THREE.Vector3();
+
+    const boatTexture = textureLoader.load('boat_texture.png');
+    boatTexture.encoding = THREE.sRGBEncoding;
+    const boatMaterial = new THREE.MeshBasicMaterial({ map: boatTexture });
+    boatMaterial.needsUpdate = true;
+
+    gltfLoader.load("boat.glb", function (glb) { 
+        boat = glb.scene; 
+        boat.children[0].material = boatMaterial;
+        boat.scale.set(30, 30, 30);
+
+        scene.add(boat);
+        console.log (boat);
+    });
 
     // Water
 
@@ -129,6 +151,14 @@ function onWindowResize() {
 
 function animate() {
 
+    let time = clock.getElapsedTime();
+
+    if (boat){
+        boat.position.y = Math.sin(time) * 0.5-3;   
+        boat.rotation.x = Math.sin(time) * 0.03;
+        boat.rotation.z = Math.cos(time) * 0.03; 
+    }
+    
     requestAnimationFrame( animate );
     render();
 
@@ -141,4 +171,3 @@ function render() {
     renderer.render( scene, camera );
 
 }
-main();
