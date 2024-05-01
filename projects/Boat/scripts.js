@@ -15,7 +15,6 @@ function main() {
 
     // Loaders
     const gltfLoader = new GLTFLoader();
-    const textureLoader = new THREE.TextureLoader();
     
     // Renderer setup
     renderer = new THREE.WebGLRenderer();
@@ -36,14 +35,8 @@ function main() {
     sun = new THREE.Vector3();
 
     // Boat setup
-    const boatTexture = textureLoader.load('boat_texture.png');
-    boatTexture.encoding = THREE.sRGBEncoding;
-    const boatMaterial = new THREE.MeshBasicMaterial({ map: boatTexture });
-    boatMaterial.needsUpdate = true;
-
     gltfLoader.load("boat.glb", function (glb) { 
         boat = glb.scene; 
-        boat.children[0].material = boatMaterial;
         boat.scale.set(30, 30, 30);
 
         scene.add(boat);
@@ -148,7 +141,7 @@ function render() {
     let time = clock.getElapsedTime();
 
     if (boat){
-        boat.position.y = Math.sin(time) * 0.5-3;   
+        boat.position.y = Math.sin(time) * 0.03+6;   
         boat.rotation.x = Math.sin(time) * 0.03;
         boat.rotation.z = Math.cos(time) * 0.03; 
     }
