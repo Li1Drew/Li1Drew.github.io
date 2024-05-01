@@ -11,17 +11,13 @@ let controls, water, sun, boat;
 
 const clock = new Clock();
 
-init();
-animate();
-
-function init() {
+function main() {
 
     // Loaders
     const gltfLoader = new GLTFLoader();
     const textureLoader = new THREE.TextureLoader();
-
-    //
-
+    
+    // Renderer setup
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -29,17 +25,17 @@ function init() {
     renderer.toneMappingExposure = 0.5;
     document.body.appendChild( renderer.domElement );
 
-    //
-
+    // Scene setup
     scene = new THREE.Scene();
 
+    // Camera setup
     camera = new THREE.PerspectiveCamera( 55, window.innerWidth / window.innerHeight, 1, 20000 );
     camera.position.set( 30, 30, 100 );
-
-    //
-
+    
+    // Sun setup
     sun = new THREE.Vector3();
 
+    // Boat setup
     const boatTexture = textureLoader.load('boat_texture.png');
     boatTexture.encoding = THREE.sRGBEncoding;
     const boatMaterial = new THREE.MeshBasicMaterial({ map: boatTexture });
@@ -54,8 +50,7 @@ function init() {
         console.log (boat);
     });
 
-    // Water
-
+    // Water setup
     const waterGeometry = new THREE.PlaneGeometry( 10000, 10000 );
 
     water = new Water(
@@ -76,12 +71,12 @@ function init() {
         }
     );
 
+    // Rotate water plane
     water.rotation.x = - Math.PI / 2;
 
     scene.add( water );
 
-    // Skybox
-
+    // Skybox setup
     const sky = new Sky();
     sky.scale.setScalar( 10000 );
     scene.add( sky );
@@ -125,7 +120,7 @@ function init() {
 
     updateSun();
 
-
+    // Controls setup
     controls = new OrbitControls( camera, renderer.domElement );
     controls.maxPolarAngle = Math.PI * 0.495;
     controls.target.set( 0, 10, 0 );
@@ -135,22 +130,21 @@ function init() {
 
     const waterUniforms = water.material.uniforms;
 
+    // Add Window resize listener
     window.addEventListener( 'resize', onWindowResize );
 
+    //Start animating
+    requestAnimationFrame(render);
 }
 
-
 function onWindowResize() {
-
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 
     renderer.setSize( window.innerWidth, window.innerHeight );
-
 }
 
-function animate() {
-
+function render() {
     let time = clock.getElapsedTime();
 
     if (boat){
@@ -159,15 +153,11 @@ function animate() {
         boat.rotation.z = Math.cos(time) * 0.03; 
     }
     
-    requestAnimationFrame( animate );
-    render();
-
-}
-
-function render() {
-
     water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
 
     renderer.render( scene, camera );
-
+    
+    requestAnimationFrame(render);
 }
+
+main();
